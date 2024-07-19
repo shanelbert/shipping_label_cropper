@@ -1,0 +1,76 @@
+Sub Main()
+
+If ActiveDocument.Shapes.Count > 0 Then
+
+Dim imageCount As Integer
+imageCount = ActiveDocument.Shapes.Count
+Dim i As Integer
+
+'Menghapus semua hal kecuali gambar
+ActiveDocument.Shapes.SelectAll
+Selection.Cut
+ActiveDocument.Content.Delete
+ActiveDocument.Paragraphs(1).Range.Paste
+
+
+Dim allShape() As Shape
+ReDim allShape(imageCount)
+For i = 0 To imageCount - 1
+    'Menyimpan reference gambar
+    '(diasumsikan diperlukan karena urutan shape di activedocument akan berubah setelah cut/paste dilakukan)
+    Set allShape(i) = ActiveDocument.Shapes(i + 1)
+    
+    'Resize gambar (9.5cm = 269.25 unit)
+    ActiveDocument.Shapes(i + 1).Width = 269.25 
+Next i
+
+
+'Menambahkan halaman
+For i = 1 To (imageCount - 1) \ 6
+    With ActiveDocument.Paragraphs(1).Range
+     .Collapse Direction:=wdCollapseEnd
+     .InsertBreak Type:=wdPageBreak
+    End With
+Next i
+
+
+'Membagi gambar ke semua halaman
+For i = 0 To imageCount - 1
+    allShape(i).Select
+    Selection.Cut
+    With ActiveDocument.Paragraphs((i \ 6) + 1).Range
+        .Collapse Direction:=wdCollapseEnd
+        .Paste
+    End With
+Next i
+
+
+'Merapikan posisi gambar di setiap halaman
+'(allShape tidak dapat digunakan karena cut dan paste tampaknya menghapus reference)
+Dim margin As Integer
+margin = 10
+Dim x As Integer
+For i = 0 To imageCount - 1
+    x = i + 1
+    
+    If (i Mod 6) Mod 2 = 0 Then
+    ActiveDocument.Shapes(x).Left = 0
+    Else
+    ActiveDocument.Shapes(x).Left = ActiveDocument.Shapes(x - 1).Left + ActiveDocument.Shapes(x - 1).Width + margin
+    End If
+        
+    If (i Mod 6) < 2 Then
+    ActiveDocument.Shapes(x).Top = 0
+    Else
+    ActiveDocument.Shapes(x).Top = ActiveDocument.Shapes(x - 2).Top + ActiveDocument.Shapes(x - 2).Height + margin
+    End If
+Next i
+
+
+'Menghapus baris kosong sebelum page break di halaman pertama
+If imageCount > 6 Then ActiveDocument.Paragraphs(1).Range.Delete
+
+
+End If
+
+End Sub

@@ -1,0 +1,23 @@
+.mainContainer {
+	width: 320px;
+	padding: 8px 16px;
+	color: #314d3e;
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.title {
+	width: 100%;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.errorMessage {
+	color: gray;
+	width: 100%;
+	font-size: 12px;
+	font-style: italic;
+}

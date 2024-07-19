@@ -1,0 +1,43 @@
+{
+	"manifest_version": 3,
+	"name": "Download Labels",
+	"version": "1.0",
+	"icons": {
+		"48": "assets/box_filled.png",
+		"96": "assets/box_filled.png"
+	},
+	"permissions": [
+		"tabs",
+		"scripting",
+		"storage",
+		"offscreen"
+	],
+	"host_permissions": [
+		"https://seller.tokopedia.com/*",
+		"https://seller.shopee.co.id/*"
+	],
+	"background": {
+		"service_worker": "background.js",
+		"type": "module"
+	},
+	"action": {
+		"default_icon": {
+			"16": "assets/box_empty.png",
+			"24": "assets/box_empty.png",
+			"32": "assets/box_empty.png"
+		},
+		"default_title": "Download shipping labels",
+		"default_popup": "popup.html"
+	},
+	"web_accessible_resources": [
+		{
+			"resources": [
+				"packages/4.0.269.pdf.*.mjs"
+			],
+			"matches": [
+				"https://seller.tokopedia.com/*",
+				"https://seller.shopee.co.id/*"
+			]
+		}
+	]
+}
